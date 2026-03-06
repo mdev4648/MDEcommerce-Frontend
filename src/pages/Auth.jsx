@@ -8,10 +8,13 @@ import {
   useLoginUserMutation,
   useRegisterUserMutation,
 } from "../features/auth/authApi";
-
 import loginImg from "../assets/login_avator.jpg";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../features/auth/authSlice";
+
 
 function Auth() {
+  const dispatch = useDispatch();
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [remember, setRemember] = useState(false);
@@ -43,7 +46,8 @@ function Auth() {
     try {
       const res = await loginUser(loginData).unwrap();
 
-      localStorage.setItem("access", res.access);
+      // localStorage.setItem("access", res.access);
+      dispatch(setCredentials(res.access));
       localStorage.setItem("refresh", res.refresh);
 
       toast.success("Login successful 🎉");
