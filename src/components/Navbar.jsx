@@ -12,6 +12,7 @@ import {
 import { useTheme } from "../context/ThemeContext";
 import { useGetProfileQuery } from "../features/auth/authApi";
 import { isAuthenticated } from "../utils/auth";
+import { useSelector } from "react-redux";
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState("MEN");
@@ -20,10 +21,12 @@ export default function Navbar() {
 
   const menuItems = ["MEN", "WOMEN", "ACCESSORIES", "COLLECTION"];
   const loggedIn = isAuthenticated();
-
+  const token = useSelector((state) => state.auth.token);
   const { data: profile } = useGetProfileQuery(undefined, { //skip prevents API call if user not logged in.
-  skip: !loggedIn,
+  skip: !token,
 });
+
+console.log("The user",profile)
 
   return (
     <nav className="bg-background text-forground shadow-md sticky top-0 z-50">
@@ -83,7 +86,7 @@ export default function Navbar() {
             {/* PROFILE */}
 
             {/* <FiUser className="cursor-pointer text-xl dark:text-white" /> */}
-            {loggedIn ? (
+            {token ? (
   <div className="flex items-center gap-2 cursor-pointer">
 
     <img
