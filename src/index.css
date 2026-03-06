@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+/* enable class dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* =========================
+   LIGHT MODE COLORS
+========================= */
+
+:root {
+  --background: #ffffff;
+  --foreground: #0f172a;
+
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+
+  --border: #e5e7eb;
+
+  --primary: #f97316;
+  --primary-foreground: #ffffff;
+
+  --muted: #f3f4f6;
+}
+
+/* =========================
+   DARK MODE COLORS
+========================= */
+
+.dark {
+  --background: #0b0f19;
+  --foreground: #f8fafc;
+
+  --card: #111827;
+  --card-foreground: #f9fafb;
+
+  --border: #1f2937;
+
+  --primary: #fb923c;
+  --primary-foreground: #ffffff;
+
+  --muted: #1f2937;
+}
+
+/* =========================
+   GLOBAL UTILITY CLASSES
+========================= */
+
+.bg-background {
+  background-color: var(--background);
+}
+
+.text-foreground {
+  color: var(--foreground);
+}
+
+.bg-card {
+  background-color: var(--card);
+}
+
+.text-card {
+  color: var(--card-foreground);
+}
+
+.border-border {
+  border-color: var(--border);
+}
+
+.bg-primary {
+  background-color: var(--primary);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+
+.bg-muted {
+  background-color: var(--muted);
+}
