@@ -24,12 +24,17 @@
 import Auth from "./pages/Auth";
 import Navbar from "./components/Navbar";
 import { ThemeProvider } from "./context/ThemeContext";
+import PersistLogin from "./features/auth/PersistLogin";
 
 function App() {
   return (
+// we use PersistLogin if we want inistialize access and refresh toke as null and set update tokens , check on apiSlice.js
   <ThemeProvider>
-     <Navbar />
+   {/* <PersistLogin>   */}  
+      <Navbar />
      <Auth />
+   {/* </PersistLogin> */}
+
   </ThemeProvider>
    );
 }

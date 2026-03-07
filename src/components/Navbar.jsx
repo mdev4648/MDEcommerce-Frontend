@@ -13,7 +13,18 @@ import { useTheme } from "../context/ThemeContext";
 import { useGetProfileQuery } from "../features/auth/authApi";
 import { isAuthenticated } from "../utils/auth";
 import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { logout } from "../features/auth/authSlice";
+import { apiSlice } from "../services/apiSlice";
+// import { useNavigate } from "react-router-dom";
+import ProfileDropdown from "../components/ProfileDropdown";
+
+
+
 export default function Navbar() {
+
+  const dispatch = useDispatch();
+  // const navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
   const [active, setActive] = useState("MEN");
 
@@ -22,11 +33,21 @@ export default function Navbar() {
   const menuItems = ["MEN", "WOMEN", "ACCESSORIES", "COLLECTION"];
   const loggedIn = isAuthenticated();
   const token = useSelector((state) => state.auth.token);
-  const { data: profile } = useGetProfileQuery(undefined, { //skip prevents API call if user not logged in.
+  const { data: profile, isLoading } = useGetProfileQuery(undefined, { //skip prevents API call if user not logged in.
   skip: !token,
 });
 
-console.log("The user",profile)
+    const handleLogout = () => {
+
+    // clear auth state
+    dispatch(logout());
+    // clear RTK Query cache
+    dispatch(apiSlice.util.resetApiState());
+    // redirect user
+    // navigate("/login");
+
+  };
+
 
   return (
     <nav className="bg-background text-forground shadow-md sticky top-0 z-50">
@@ -83,24 +104,6 @@ console.log("The user",profile)
 
             <FiSearch className="cursor-pointer text-xl dark:text-white" />
 
-            {/* PROFILE */}
-
-            {/* <FiUser className="cursor-pointer text-xl dark:text-white" /> */}
-            {token ? (
-  <div className="flex items-center gap-2 cursor-pointer">
-
-    <img
-      src={profile?.profile_image}
-      alt="profile"
-      className="w-9 h-9 rounded-full object-cover border"
-    />
-
-  </div>
-) : (
-    <div className=" dark:text-white flex gap-2 ">
-  <FiUser className="cursor-pointer text-xl " /> Sign In</div>
-)}
-
             {/* CART */}
 
             <div className="relative">
@@ -111,15 +114,24 @@ console.log("The user",profile)
               </span>
             </div>
 
+            {/* PROFILE */}
+
+                {token ? (
+                  <ProfileDropdown profile={profile} />
+                ) : (
+                    <div className=" dark:text-white flex gap-2 ">
+                  <FiUser className="cursor-pointer text-xl " /> Sign In</div>
+                )}
+
             {/* THEME */}
 
-            <button onClick={() => setDark(!dark)}>
+            {/* <button onClick={() => setDark(!dark)}>
               {dark ? (
                 <FiSun className="text-xl text-yellow-400" />
               ) : (
                 <FiMoon className="text-xl" />
               )}
-            </button>
+            </button> */}
 
             {/* MOBILE MENU BUTTON */}
 
@@ -159,6 +171,9 @@ console.log("The user",profile)
         )}
 
       </div>
+
+
+    
     </nav>
   );
 }

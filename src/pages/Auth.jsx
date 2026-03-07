@@ -47,7 +47,11 @@ function Auth() {
       const res = await loginUser(loginData).unwrap();
 
       // localStorage.setItem("access", res.access);
-      dispatch(setCredentials(res.access));
+      dispatch(setCredentials({
+           access: res.access,
+          refresh: res.refresh,
+      })
+    );
       localStorage.setItem("refresh", res.refresh);
 
       toast.success("Login successful 🎉");
