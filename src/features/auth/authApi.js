@@ -27,6 +27,14 @@ export const authApi = apiSlice.injectEndpoints({   // Your apiSlice is the main
       providesTags: ["User"], // 🔥 important
     }),
 
+  refreshToken: builder.mutation({  // use this if we want apply Persisten Login and wrappe app with PersistanLogin
+  query: (refresh) => ({
+    url: "token/refresh/",
+    method: "POST",
+    body: { refresh },
+  }),
+}),
+
   }),
 });
 
@@ -34,4 +42,5 @@ export const {
   useRegisterUserMutation,
   useLoginUserMutation,
   useGetProfileQuery,
+  useRefreshTokenMutation,
 } = authApi;

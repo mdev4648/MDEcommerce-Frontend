@@ -5,7 +5,7 @@ import authReducer from "../features/auth/authSlice";
 // import { setupListeners } from '@reduxjs/toolkit/query'
 export const store = configureStore({
   reducer: {
-    [apiSlice.reducerPath]: apiSlice.reducer,
+    [apiSlice.reducerPath]: apiSlice.reducer,  //[apiSlice.reducerPath]=api  
     auth: authReducer,
   },
   middleware: (getDefaultMiddleware) =>

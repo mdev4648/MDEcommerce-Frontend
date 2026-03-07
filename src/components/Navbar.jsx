@@ -22,11 +22,10 @@ export default function Navbar() {
   const menuItems = ["MEN", "WOMEN", "ACCESSORIES", "COLLECTION"];
   const loggedIn = isAuthenticated();
   const token = useSelector((state) => state.auth.token);
-  const { data: profile } = useGetProfileQuery(undefined, { //skip prevents API call if user not logged in.
+  const { data: profile, isLoading } = useGetProfileQuery(undefined, { //skip prevents API call if user not logged in.
   skip: !token,
 });
 
-console.log("The user",profile)
 
   return (
     <nav className="bg-background text-forground shadow-md sticky top-0 z-50">
@@ -91,7 +90,7 @@ console.log("The user",profile)
 
     <img
       src={profile?.profile_image}
-      alt="profile"
+      alt=""
       className="w-9 h-9 rounded-full object-cover border"
     />
 
