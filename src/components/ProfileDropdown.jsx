@@ -46,7 +46,7 @@ export default function ProfileDropdown({ profile }) {
   }, []);
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative text-foreground " ref={dropdownRef}>
       
       {/* Avatar Button */}
       <img
@@ -57,12 +57,13 @@ export default function ProfileDropdown({ profile }) {
       />
 
       {open && (
-        <div className="absolute right-0 mt-3 w-75 bg-white dark:bg-zinc-900 rounded-xl shadow-lg border border-gray-200 dark:border-zinc-800 p-3">
+        <div className="absolute top-13 right-0  w-75  bg-white dark:bg-zinc-900 rounded-xl shadow-lg border border-gray-200 dark:border-zinc-800 p-3">
 
           {/* Profile header */}
           <div className="flex items-center gap-3 pb-3 border-b border-gray-200 dark:border-zinc-800">
             <img
               src={profile?.profile_image || "https://i.pravatar.cc/40"}
+               alt="avatar"
               className="w-10 h-10 rounded-full"
             />
             <div>
@@ -78,15 +79,14 @@ export default function ProfileDropdown({ profile }) {
           {/* Theme Switch */}
 
 
-
           <div className="flex justify-between bg-gray-100 dark:bg-zinc-800 rounded-lg p-1 mt-3">
-            <button  onClick={() => setDark(false)} className={`flex flex-1 items-center justify-center py-1 rounded  ${ !dark ? "bg-white":"" }  `}>
-                <FiSun className={`text-xl ${!dark ? "text-yellow-400" : "text-pink-100"}`} />
+            <button  onClick={() => setDark(false)} className="flex flex-1 items-center justify-center py-1 rounded bg-zinc-200 dark:bg-zinc-800 ">
+                <FiSun className={`text-xl  dark:text-white  text-yellow-400`} />  
             </button>
-            <button onClick={() => setDark(true)} className={` flex flex-1 py-1 items-center justify-center rounded  ${ dark ? "bg-zinc-700":"" } `}>
-               <FiMoon className={`text-xl ${dark ? "text-yellow-400" : ""}`}/>
+            <button onClick={() => setDark(true)} className="flex flex-1 py-1 items-center justify-center rounded dark:bg-zinc-700 ">
+               <FiMoon className="text-xl dark:text-yellow-400"/>
             </button>
-            <button className={`flex-1 py-1 rounded hover:bg-white dark:hover:bg-zinc-700`}>
+            <button className="flex-1 py-1 rounded hover:bg-white dark:hover:bg-zinc-700">
               💻
             </button>
           </div>

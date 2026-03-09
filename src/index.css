@@ -73,6 +73,10 @@
   color: var(--primary);
 }
 
+.text-muted {
+  color: var(--muted);
+}
+
 .bg-muted {
   background-color: var(--muted);
 }
