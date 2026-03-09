@@ -35,6 +35,30 @@ export const authApi = apiSlice.injectEndpoints({   // Your apiSlice is the main
   }),
 }),
 
+requestOtp: builder.mutation({
+  query: (data) => ({
+    url: "users/password/request-otp/",
+    method: "POST",
+    body: data,
+  }),
+}),
+
+verifyOtp: builder.mutation({
+  query: (data) => ({
+    url: "users/password/verify-otp/",
+    method: "POST",
+    body: data,
+  }),
+}),
+
+resetPassword: builder.mutation({
+  query: (data) => ({
+    url: "users/password/reset/",
+    method: "POST",
+    body: data,
+  }),
+}),
+
   }),
 });
 
@@ -43,4 +67,7 @@ export const {
   useLoginUserMutation,
   useGetProfileQuery,
   useRefreshTokenMutation,
+  useRequestOtpMutation,
+  useVerifyOtpMutation,
+  useResetPasswordMutation
 } = authApi;

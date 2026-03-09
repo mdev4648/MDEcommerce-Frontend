@@ -8,10 +8,10 @@ import {
   useLoginUserMutation,
   useRegisterUserMutation,
 } from "../features/auth/authApi";
-import loginImg from "../assets/login_avator.jpg";
+import loginImg from "../assets/login_avator.png";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../features/auth/authSlice";
-
+import ForgotPasswordModal from "../components/ForgotPasswordModal";
 
 function Auth() {
   const dispatch = useDispatch();
@@ -37,6 +37,7 @@ function Auth() {
   });
 
   const [preview, setPreview] = useState(null);
+  const [openForgot, setOpenForgot] = useState(false);
 
   /* ================= LOGIN ================= */
 
@@ -317,7 +318,8 @@ function Auth() {
                   </div>
 
                   <div className="text-primary cursor-pointer hover:underline">
-                    Forgot Password?
+                    <p className="text-primary cursor-pointer" onClick={() => setOpenForgot(true)}>Forgot Password?</p>
+                    
                   </div>
 
                 </div>
@@ -438,6 +440,8 @@ function Auth() {
         </div>
 
       </div>
+
+      <ForgotPasswordModal open={openForgot} onClose={() => setOpenForgot(false)} />
 
     </div>
   );
