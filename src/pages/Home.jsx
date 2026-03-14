@@ -83,7 +83,7 @@ export default function Hero() {
                 initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.6 }}
-                className="text-foreground/60 text-lg md:text-xl max-w-md mb-8"
+                className="text-foreground text-lg md:text-xl max-w-md mb-8"
               >
                 {slides[current].desc}
               </motion.p>
@@ -97,7 +97,7 @@ export default function Hero() {
                 <button className="bg-primary hover:bg-primary/90 text-white px-8 py-4 rounded-full font-bold flex items-center gap-2 transition-all group shadow-lg shadow-primary/20">
                   Shop Now <FiArrowRight className="group-hover:translate-x-1 transition-transform" />
                 </button>
-                <button className="bg-white dark:bg-card border border-border text-foreground px-8 py-4 rounded-full font-bold transition-all">
+                <button className="bg-white dark:bg-card border border-border  px-8 py-4 rounded-full font-bold transition-all">
                   View Specs
                 </button>
               </motion.div>

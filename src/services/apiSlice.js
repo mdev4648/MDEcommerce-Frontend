@@ -30,6 +30,8 @@ import { setCredentials, logout } from "../features/auth/authSlice";
 // Basic baseQuery
 const baseQuery = fetchBaseQuery({
   baseUrl: "http://127.0.0.1:8000/api/",
+  //  baseUrl: "http://10.74.5.81:8000/api/",   //for mobile    python manage.py runserver 0.0.0.0:8000
+
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.token;
 
