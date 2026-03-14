@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import {
   useRequestOtpMutation,
   useVerifyOtpMutation,
@@ -8,8 +8,10 @@ import { ImSpinner2 } from "react-icons/im";
 import toast from "react-hot-toast";
 import OtpInput from "./OtpInput";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-export default function ForgotPasswordModal({ open, onClose }) {
 
+export default function ForgotPasswordModal({ open, onClose }) {
+  const [timer, setTimer] = useState(30);
+  const [canResend, setCanResend] = useState(false);
   const [step, setStep] = useState(1);
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
@@ -21,9 +23,26 @@ export default function ForgotPasswordModal({ open, onClose }) {
   const [showPassword, setShowPassword] = useState(false);
 
 
-  if (!open) return null;
 
- console.log("Request Login loading",requestLoading)
+    useEffect(() => {
+        let interval;
+
+        if (step === 2 && timer > 0) {
+          interval = setInterval(() => {
+            setTimer((prev) => prev - 1);
+          }, 1000);
+        }
+
+        if (timer === 0) {
+          setCanResend(true);
+        }
+
+        return () => clearInterval(interval);
+      }, [timer, step]);
+
+
+
+  if (!open) return null;
 
   // STEP 1
   const handleRequestOtp = async () => {
@@ -65,6 +84,22 @@ export default function ForgotPasswordModal({ open, onClose }) {
       
     }
   };
+
+  const handleResendOtp = async () => {
+  try {
+    await requestOtp({ email }).unwrap();
+
+    setTimer(30);
+    setCanResend(false);
+  } catch {
+    alert("Failed to resend OTP");
+  }
+};
+
+
+
+
+
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/40">
@@ -133,6 +168,29 @@ export default function ForgotPasswordModal({ open, onClose }) {
               )}
               {verifyLoading ? "Verifiying" : " Verify"}
             </button>
+
+             {/* RESEND SECTION */}
+              <div className="text-center mt-4 text-sm  flex justify-center items-center gap-2 ">
+                {canResend ? (
+                  <button
+                    onClick={handleResendOtp}
+                    className="text-primary font-medium flex justify-center items-center gap-2  "
+                  >
+                   
+                      {requestLoading&& (
+                <ImSpinner2 className="animate-spin" />
+              )}
+              {requestLoading ? "Resending email" : "Resend OTP"}
+
+
+
+                  </button>
+                ) : (
+                  <p className="text-gray-400">
+                    Resend OTP in {timer}s
+                  </p>
+                )}
+              </div>
           </>
         )}
 

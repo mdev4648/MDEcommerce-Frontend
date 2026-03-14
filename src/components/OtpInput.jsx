@@ -1,41 +1,58 @@
 import { useRef } from "react";
 
 export default function OtpInput({ value, onChange }) {
-
   const inputs = useRef([]);
 
   const handleChange = (e, index) => {
-    const val = e.target.value.replace(/[^0-9]/g, "");
+    const val = e.target.value.replace(/\D/g, "");
 
     if (!val) return;
 
-    const newOtp = value.split("");
-    newOtp[index] = val;
+    const otpArray = value.split("");
+    otpArray[index] = val;
 
-    const finalOtp = newOtp.join("");
-    onChange(finalOtp);
+    const newOtp = otpArray.join("");
+    onChange(newOtp);
 
-    // move to next input
     if (index < 5) {
-      inputs.current[index + 1].focus();
+      inputs.current[index + 1]?.focus();
     }
   };
 
   const handleKeyDown = (e, index) => {
     if (e.key === "Backspace") {
-      const newOtp = value.split("");
-      newOtp[index] = "";
-      onChange(newOtp.join(""));
+      const otpArray = value.split("");
+      otpArray[index] = "";
+      onChange(otpArray.join(""));
 
-      if (index > 0) {
-        inputs.current[index - 1].focus();
+      if (!value[index] && index > 0) {
+        inputs.current[index - 1]?.focus();
       }
     }
   };
 
-  return (
-    <div className="flex justify-center gap-3 ">
+  // Paste full OTP
+  const handlePaste = (e) => {
+    const paste = e.clipboardData.getData("text").replace(/\D/g, "");
 
+    if (!paste) return;
+
+    const otp = paste.slice(0, 6).split("");
+
+    onChange(otp.join(""));
+
+    otp.forEach((num, i) => {
+      if (inputs.current[i]) {
+        inputs.current[i].value = num;
+      }
+    });
+
+    const lastIndex = otp.length - 1;
+    inputs.current[lastIndex]?.focus();
+  };
+
+  return (
+    <div className="flex justify-center gap-3">
       {[...Array(6)].map((_, index) => (
         <input
           key={index}
@@ -45,10 +62,10 @@ export default function OtpInput({ value, onChange }) {
           value={value[index] || ""}
           onChange={(e) => handleChange(e, index)}
           onKeyDown={(e) => handleKeyDown(e, index)}
-          className="w-12 h-12 text-center text-lg border border-border rounded-lg  focus:ring-2 focus:ring-primary dark:bg-gray-100"
+          onPaste={handlePaste}
+          className="w-12 h-12 text-center text-lg border border-border rounded-lg bg-background focus:ring-2 focus:ring-primary outline-none"
         />
       ))}
-
     </div>
   );
 }

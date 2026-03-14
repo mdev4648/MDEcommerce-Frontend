@@ -18,7 +18,7 @@ import { logout } from "../features/auth/authSlice";
 import { apiSlice } from "../services/apiSlice";
 // import { useNavigate } from "react-router-dom";
 import ProfileDropdown from "../components/ProfileDropdown";
-
+import { Link } from "react-router-dom";
 
 
 export default function Navbar() {
@@ -48,7 +48,6 @@ export default function Navbar() {
 
   };
 
-
   return (
     <nav className="bg-background text-forground shadow-md sticky top-0 z-50">
 
@@ -59,7 +58,8 @@ export default function Navbar() {
           {/* LOGO */}
 
           <div className="text-2xl font-bold text-orange-500">
-            MD Shop
+            
+            <Link to="/">MD Shop</Link>
           </div>
 
           {/* CENTER MENU */}
