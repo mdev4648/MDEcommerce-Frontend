@@ -39,6 +39,9 @@ const variants = product?.variants || [];
 const colors = [];
 const sizes = [];
 
+
+console.log("Variants",variants)
+
 variants?.forEach((variant) => {
   variant.attributes.forEach((attr) => {
     const [type, value] = attr.split(" -");
@@ -70,6 +73,8 @@ const [selectedSize, setSelectedSize] = useState(null);
 if (isLoading) return <p className="p-10">Loading product...</p>;
 
 if (error) return <p className="p-10 text-red-500">Error loading product</p>;
+
+console.log("sizes",sizes)
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-10 transition-colors duration-300">
@@ -174,9 +179,10 @@ if (error) return <p className="p-10 text-red-500">Error loading product</p>;
                     >
                       <span 
                         className="w-8 h-8 rounded-full shadow-inner" 
-                        style={{ backgroundColor: color.hex }}
+                        style={{ backgroundColor: `${color.name}` }}
+                        // style={{ backgroundColor: color.hex }}
                       />
-                      <span className="absolute -top-8 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="absolute -top-5 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
                         {color.name}
                       </span>
                     </button>
@@ -185,11 +191,11 @@ if (error) return <p className="p-10 text-red-500">Error loading product</p>;
               </div>
 
               {/* Size Selection */}
-              {/* <div>
+              <div>
                 <h4 className="text-xs font-black uppercase tracking-[0.2em] mb-4 opacity-60">Fit System</h4>
                 <div className="flex gap-3">
-                  {product.sizes.map((size) => (
-                 
+                  
+                 {sizes.map((size) => (
                     <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
@@ -199,11 +205,11 @@ if (error) return <p className="p-10 text-red-500">Error loading product</p>;
                           : "bg-card border-border text-foreground hover:border-primary"
                       }`}
                     >
-                      {size}
+                      {size?.name}
                     </button>
                   ))}
                 </div>
-              </div> */}
+              </div>
 
               {/* Quantity & Wishlist */}
               <div className="flex items-center gap-6 pt-4">
@@ -227,12 +233,12 @@ if (error) return <p className="p-10 text-red-500">Error loading product</p>;
               {/* Final Action */}
               <button className="w-full bg-primary text-white py-6 rounded-[24px] font-black text-xl flex items-center justify-center gap-4 hover:brightness-110 shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
                 <ShoppingBag size={24} />
-                Add to Cart • Birr {(product.price * quantity).toLocaleString()}
-                     {/* Add to Cart • Birr {Number(
-                                    selectedColor?.price ||
-                                    selectedSize?.price ||
-                                    product.price
-                                  ).toLocaleString()} */}
+                {/* Add to Cart • Birr {(product.price * quantity).toLocaleString()} */}
+                     Add to Cart • Birr {Number(
+                                    // selectedColor?.price * quantity ||
+                                    selectedSize?.price * quantity ||
+                                    product.price * quantity
+                                  ).toLocaleString()}
               </button>
             </div>
 

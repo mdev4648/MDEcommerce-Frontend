@@ -124,7 +124,7 @@ export default function ProductCard({ product }) {
           style={{ opacity }}
           className="absolute inset-0 flex items-center justify-center pl-12 pointer-events-none"
         >
-          <span className="text-gray-400 dark:text-primary text-[9px] font-black tracking-[0.2em] uppercase">
+          <span className="text-gray-400 ml-10 dark:text-primary text-[9px] font-black tracking-[0.2em] uppercase">
             Swipe to Buy
           </span>
         </motion.div>
