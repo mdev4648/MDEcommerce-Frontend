@@ -49,8 +49,13 @@
   background-color: var(--background);
 }
 
+
 .text-foreground {
   color: var(--foreground);
+}
+
+body{
+ background-color: var(--background);
 }
 
 .bg-card {
