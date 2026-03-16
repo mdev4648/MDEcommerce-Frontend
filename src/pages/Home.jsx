@@ -10,7 +10,7 @@ import camera2 from "../assets/camera2.png";
 import camera from  "../assets/landingcamera.png";
 import projector from  "../assets/projector.png";
 import dimage from  "../assets/3dmage.png";
-     
+  
 const slides = [
   {
     id: 1,
@@ -269,7 +269,7 @@ export default function Hero() {
 //   );
 // }
 
-///////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // import ProductCard from "../components/ProductCard"; // Your existing amazing card
 
