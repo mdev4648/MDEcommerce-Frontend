@@ -19,9 +19,11 @@ import { apiSlice } from "../services/apiSlice";
 // import { useNavigate } from "react-router-dom";
 import ProfileDropdown from "../components/ProfileDropdown";
 import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
+
+  const navigate = useNavigate();
 
   const dispatch = useDispatch();
   // const navigate = useNavigate();
@@ -59,7 +61,7 @@ export default function Navbar() {
 
           <div className="text-2xl font-bold text-orange-500">
             
-            <Link to="/">MD Shop</Link>
+            <Link to="/">INFINITY ELECTRONICS</Link>
           </div>
 
           {/* CENTER MENU */}
@@ -106,7 +108,7 @@ export default function Navbar() {
 
             {/* CART */}
 
-            <div className="relative">
+            <div className="relative"   onClick={() => navigate("/cart")} > 
               <FiShoppingCart className="cursor-pointer text-xl dark:text-white" />
 
               <span className="absolute -top-2 -right-2 bg-orange-500 text-white text-xs px-1 rounded-full">

@@ -5,7 +5,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import PersistLogin from "./features/auth/PersistLogin";
 import Home from "./pages/Home";
 import ProductDetail from "./pages/ProductDetail";
-// import Cart from "./pages/Cart";
+import Cart from "./pages/Cart";
 // import Checkout from "./pages/Checkout";
 // import Orders from "./pages/Orders";
 // import Profile from "./pages/Profile";
@@ -24,17 +24,13 @@ function App() {
         <Route path="/register" element={<Auth />} />
         {/* PRODUCT */}
         <Route path="/product/:id" element={<ProductDetail />} />
-
-        {/* PROTECTED */}
-        {/* <Route
-          path="/cart"
+        <Route path="/cart"
           element={
             <ProtectedRoute>
               <Cart />
             </ProtectedRoute>
           }
-        /> */}
-
+        />
       </Routes>
 
     </ThemeProvider>

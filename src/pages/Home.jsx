@@ -43,6 +43,7 @@ export default function Hero() {
   }, []);
 
     if (isLoading) return <p>Loading products...</p>;
+    
    if (error) return <p>Error fetching products</p>;
 
   return (

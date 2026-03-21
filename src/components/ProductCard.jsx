@@ -137,7 +137,7 @@ export default function ProductCard({ product }) {
           style={{ x }}
           className="z-10 bg-white text-black h-full px-6 md:px-8 flex items-center justify-center rounded-xl font-bold text-base md:text-lg cursor-grab active:cursor-grabbing shadow-lg"
         >
-          ${product.price}
+          Br {product.price}
         </motion.div>
         
         <div className="ml-auto pr-4 text-white/20">
