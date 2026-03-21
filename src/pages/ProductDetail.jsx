@@ -5,6 +5,10 @@ import { Heart, Minus, Plus, ShoppingBag, ChevronLeft, Share2, Star } from "luci
 import { useParams } from "react-router-dom";
 import { useGetProductByIdQuery } from "../features/products/productApi";
 import { useNavigate } from "react-router-dom";
+import { useAddToCartMutation } from "../features/cart/cartApi";
+import { ImSpinner2 } from "react-icons/im";
+
+
 export default function ProductDetail()  {
 
   // Mock Data
@@ -36,45 +40,139 @@ const [activeImg, setActiveImg] = useState(0);
 const [isWishlisted, setIsWishlisted] = useState(false);
 const navigate = useNavigate();
 const variants = product?.variants || [];
-const colors = [];
-const sizes = [];
+// const colors = [];
+// const sizes = [];
 
 
-console.log("Variants",variants)
+// variants?.forEach((variant) => {
+//   variant.attributes.forEach((attr) => {
+//     const [type, value] = attr.split(" -");
 
-variants?.forEach((variant) => {
+//     if (type === "Color") {
+//       colors.push({
+//         name: value,
+//         hex: "#d35d5dff", // default color
+//         variantId: variant.id,
+//         stock: variant.stock,
+//         price: variant.price,
+//       });
+//     }
+
+//     if (type === "Size") {
+//       sizes.push({
+//         name: value,
+//         variantId: variant.id,
+//         stock: variant.stock,
+//         price: variant.price,
+//       });
+//     }
+//   });
+// })
+
+
+// store all variants with parsed attributes
+const parsedVariants = variants.map((variant) => {
+  let color = null;
+  let size = null;
+
   variant.attributes.forEach((attr) => {
     const [type, value] = attr.split(" -");
 
-    if (type === "Color") {
-      colors.push({
-        name: value,
-        hex: "#d35d5dff", // default color
-        variantId: variant.id,
-        stock: variant.stock,
-        price: variant.price,
-      });
-    }
-
-    if (type === "Size") {
-      sizes.push({
-        name: value,
-        variantId: variant.id,
-        stock: variant.stock,
-        price: variant.price,
-      });
-    }
+    if (type === "Color") color = value;
+    if (type === "Size") size = value;
   });
-})
+
+  return {
+    id: variant.id,
+    color,
+    size,
+    price: variant.price,
+    stock: variant.stock,
+  };
+});
+
+
+console.log("parsed Variant ",parsedVariants)
+const colors = [...new Set(parsedVariants.map((v) => v.color).filter(Boolean))];
+const sizes = [...new Set(parsedVariants.map((v) => v.size).filter(Boolean))];
+
+
 
 const [selectedColor, setSelectedColor] = useState(null);
 const [selectedSize, setSelectedSize] = useState(null);
+
+const [addToCart, { isLoading: cartLoading }] = useAddToCartMutation();
+
+// const selectedVariant =
+//   selectedColor?.variantId || selectedSize?.variantId || null;
+
+// const selectedVariant = parsedVariants.find( (v) =>
+//     (selectedColor ? v.color === selectedColor : true) &&
+//     (selectedSize ? v.size === selectedSize : true)
+// );
+
+const selectedVariant = parsedVariants.find((v) => {
+  if (product.has_variants) {
+    if (v.color && v.size) {
+      return v.color === selectedColor && v.size === selectedSize;
+    }
+    if (v.color) {
+      return v.color === selectedColor;
+    }
+    if (v.size) {
+      return v.size === selectedSize;
+    }
+  }
+  return false;
+});
+
+console.log("Selected Variant", selectedVariant)
+
+const displayPrice =
+  selectedVariant?.price || product?.price;
+
+
+console.log ("Selected variant Price", displayPrice)
+
+
+
+const handleAddToCart = async () => {
+
+  if (product.has_variants && !selectedVariant) {
+  alert("Please select a variant");
+  return;
+}
+
+  try {
+
+    const payload = selectedVariant
+      ? {
+          product: product.id,
+          // variant_id: selectedVariant, // the previous 
+          variant_id: selectedVariant.id,
+
+          quantity: quantity,
+        }
+      : {
+          product: product.id,
+          quantity: quantity,
+        };
+
+    await addToCart(payload).unwrap();
+
+    alert("Added to cart successfully");
+
+  } catch (err) {
+    console.error(err);
+    alert("Failed to add to cart");
+  }
+};
 
 if (isLoading) return <p className="p-10">Loading product...</p>;
 
 if (error) return <p className="p-10 text-red-500">Error loading product</p>;
 
-console.log("sizes",sizes)
+
 
   return (
     <div className="min-h-screen bg-background text-foreground p-4 md:p-10 transition-colors duration-300">
@@ -155,7 +253,7 @@ console.log("sizes",sizes)
 
             <p className="text-4xl font-bold text-foreground mb-8">
               {/* £ {product.price.toLocaleString()} */}
-              Birr {Number(product.price).toLocaleString()}
+              Birr {Number(displayPrice).toLocaleString()}
             </p>
 
             <p className="text-gray-500 dark:text-gray-400 leading-relaxed text-lg mb-10">
@@ -171,19 +269,19 @@ console.log("sizes",sizes)
                   {colors.map((color) => (
                    
                     <button
-                      key={color.name}
+                      key={color}
                       onClick={() => setSelectedColor(color)}
                       className={`group relative w-12 h-12 rounded-full border-2 flex items-center justify-center transition-all ${
-                        selectedColor?.name === color.name ? "border-primary scale-110" : "border-transparent"
+                        selectedColor === color ? "border-primary scale-110" : "border-transparent"
                       }`}
                     >
                       <span 
                         className="w-8 h-8 rounded-full shadow-inner" 
-                        style={{ backgroundColor: `${color.name}` }}
+                        style={{ backgroundColor: `${color}` }}
                         // style={{ backgroundColor: color.hex }}
                       />
                       <span className="absolute -top-5 text-[10px] font-bold opacity-0 group-hover:opacity-100 transition-opacity">
-                        {color.name}
+                        {color}
                       </span>
                     </button>
                   ))}
@@ -200,12 +298,12 @@ console.log("sizes",sizes)
                       key={size}
                       onClick={() => setSelectedSize(size)}
                       className={`px-8 py-3 rounded-2xl border-2 font-bold transition-all ${
-                        selectedSize?.name === size.name
+                        selectedSize === size
                           ? "bg-primary border-primary text-white" 
                           : "bg-card border-border text-foreground hover:border-primary"
                       }`}
                     >
-                      {size?.name}
+                      {size}
                     </button>
                   ))}
                 </div>
@@ -231,14 +329,31 @@ console.log("sizes",sizes)
               </div>
 
               {/* Final Action */}
-              <button className="w-full bg-primary text-white py-6 rounded-[24px] font-black text-xl flex items-center justify-center gap-4 hover:brightness-110 shadow-lg shadow-primary/20 transition-all active:scale-[0.98]">
-                <ShoppingBag size={24} />
-                {/* Add to Cart • Birr {(product.price * quantity).toLocaleString()} */}
-                     Add to Cart • Birr {Number(
-                                    // selectedColor?.price * quantity ||
-                                    selectedSize?.price * quantity ||
-                                    product.price * quantity
-                                  ).toLocaleString()}
+              <button 
+                 onClick={handleAddToCart}
+                 disabled={cartLoading}  
+                className="w-full bg-primary text-white py-6 rounded-[24px] font-black text-xl flex items-center justify-center gap-4 hover:brightness-110 shadow-lg shadow-primary/20 transition-all active:scale-[0.98]"
+                >
+
+                  {cartLoading? (
+
+                    <ImSpinner2 className="animate-spin" size={22} />
+
+                  ): <>
+                      <ShoppingBag size={24} />
+                         {/* Add to Cart • Birr {(product.price * quantity).toLocaleString()} */}
+                        Add to Cart • Birr {Number(
+                                        // selectedColor?.price * quantity ||
+                                        // selectedSize?.price * quantity ||
+                                        // product.price * quantity
+                                        displayPrice*quantity
+                                      ).toLocaleString()}
+
+
+                   </>}
+
+
+                
               </button>
             </div>
 
