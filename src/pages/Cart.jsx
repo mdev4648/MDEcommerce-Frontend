@@ -1,14 +1,36 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useGetCartQuery, useGetCheckoutSummaryQuery } from "../features/cart/cartApi";
+import { useGetCartQuery, useGetCheckoutSummaryQuery,useUpdateCartItemMutation,useRemoveCartItemMutation, } from "../features/cart/cartApi";
 import { ImSpinner2 } from "react-icons/im";
 import { ChevronLeft } from "lucide-react";
+import { Trash2 } from "lucide-react";
 
 export default function Cart() {
   const navigate = useNavigate();
 
   const { data: cart, isLoading } = useGetCartQuery();
   const { data: summary, isLoading: summaryLoading } = useGetCheckoutSummaryQuery();
+  const [updateCartItem, { isLoading: updating }] = useUpdateCartItemMutation();
+  const [removeCartItem] = useRemoveCartItemMutation();
+
+
+const handleUpdateQuantity = async (id, quantity) => {
+  if (quantity < 1) return;
+
+  try {
+    await updateCartItem({ id, quantity }).unwrap();
+  } catch (err) {
+    console.error("Update failed", err);
+  }
+};
+
+const handleRemoveItem = async (id) => {
+  try {
+    await removeCartItem(id).unwrap();
+  } catch (err) {
+    console.error("Remove failed", err);
+  }
+};
 
 
   console.log("CART ITEMS", cart)
@@ -92,21 +114,42 @@ export default function Cart() {
                         )}
                       </div>
                     </div>
-
-                    {/* Price + Quantity */}
                     <div className="flex items-center gap-6">
 
-                      <p className="font-semibold text-lg">
-                        Birr {item.total_price.toLocaleString()}
-                      </p>
+                        <p className="font-semibold text-lg">
+                          Birr {item.total_price.toLocaleString()}
+                        </p>
 
-                      {/* Quantity */}
-                      <div className="flex items-center border border-border rounded-xl overflow-hidden">
-                        <button className="px-3 py-1 hover:bg-muted">-</button>
-                        <span className="px-4">{item.quantity}</span>
-                        <button className="px-3 py-1 hover:bg-muted">+</button>
+                        {/* Quantity */}
+                        <div className="flex items-center border border-border rounded-xl overflow-hidden">
+                          <button
+                            onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
+                            className="px-3 py-1 hover:bg-muted"
+                          >
+                            -
+                          </button>
+
+                          <span className="px-4">{item.quantity}</span>
+
+                          <button
+                            onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
+                            className="px-3 py-1 hover:bg-muted"
+                          >
+                            +
+                          </button>
+                        </div>
+
+                        {/* Remove */}
+                        <button
+                          onClick={() => handleRemoveItem(item.id)}
+                          className="text-red-500 hover:scale-110 transition"
+                        >
+                          <Trash2 size={20} />
+                        </button>
+
                       </div>
-                    </div>
+
+
                   </div>
                 );
               })}
